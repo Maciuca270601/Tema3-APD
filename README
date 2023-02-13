@@ -1,0 +1,63 @@
+Student: Maciuca Alexandru Petru
+Group: 334CA
+Homework: Calcule colaborative in sisteme distribuite
+Course: APD
+
+## About the code
+
+    The homework is using the MPI library in order to create a ring
+    topology between different processes. 
+    
+    Each process has a different role depending on the rank of the process.
+    
+    The processes are either clusters or also known as coordinators and each
+    cluster has its own workers.
+
+## The implementation
+
+    Using the MPI library, the processes are created and the topology is
+    being formed. 
+    The topology is a ring topology, meaning that each process
+    has a left and a right neighbor.(In order to diminish the amount of code,
+    there is a catch and task 1 and 3 have been combined so that the ring has
+    all connections but the connection between cluster 1 and cluster 0. This
+    has been aproved by the team on moodle)
+
+## How it works
+
+    Processes with rank ranging from 0 to 3 are called coordinators and they 
+    have to read data from a specific file and then communicate with the 
+    other clusters in order to make the full topology known. 
+
+    The rank 0 coordinator is reading his data and sending it to its neighbor
+    who is reading its own data and combining it with the data received from
+    the first and then sending it to the next process and so on. This way,
+    the last cluster which in our case is the one with rank 1 will have the
+    entire topology known. What he has to do is to send the data to all the
+    clusters backwords. This way the topology is known by all the clusters.
+
+    The next step is when a specific cluster receives the entire topology
+    to send the data to the workers. The workers are the processes with ranks
+    between 4 and numtasks.
+
+    When the topology is fully known task 1 and 3 have been completed and the
+    only thing left is to compute the result. 
+
+    Process with rank 0 creates and array and sends it to the other clusters.
+    When all the clusters get the array they have to distribute it to the 
+    workers so that the amount of computation is distributed evenly between 
+    all the workers. 
+
+    Once this is completed, process with rank 0 will gather all the information
+    that is being computed and will print the result.
+    
+     	 
+## DIFFICULTIES
+    I had some few difficulties when it comes to the computational part.
+    I could not make the scatter and gather functions to work as intended
+    so I have decided to make a custom scatter and gatter using multiple
+    send and receives. Moreover, this has been really complicated since
+    I had to make sure that I send the correct amount of data to all
+    workers since not all of them will have an equal amount of work to do.
+    Basically some will have an extra element to compute and I had to make
+    sure that I send the correct size to each worker.
